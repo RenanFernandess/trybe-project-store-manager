@@ -9,7 +9,7 @@ const getProducts = async (_req, res) => {
 };
 
 const getProductById = async ({ params: { id } }, res) => {
-  const { type, message } = await productsService.getProductById(Number(id));
+  const { type, message } = await productsService.getProductById(id);
 
   if (type) return res.status(type).json({ message });
 
