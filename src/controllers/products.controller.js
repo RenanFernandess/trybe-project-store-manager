@@ -8,9 +8,15 @@ const getProducts = async (_req, res) => {
   return res.status(200).json(message);
 };
 
-const getProductsById = async (req, res) => res.status(200).json([]);
+const getProductById = async ({ params: { id } }, res) => {
+  const { type, message } = await productsService.getProductById(Number(id));
+
+  if (type) return res.status(type).json({ message });
+
+  return res.status(200).json(message);
+};
 
 module.exports = {
   getProducts,
-  getProductsById,
+  getProductById,
 };
