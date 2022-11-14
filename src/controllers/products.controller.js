@@ -13,7 +13,7 @@ const getProductById = async ({ params: { id } }, res) => {
 
   if (type) return res.status(type).json({ message });
 
-  return res.status(200).json(message);
+  return res.status(200).json(message[0]);
 };
 
 module.exports = {
