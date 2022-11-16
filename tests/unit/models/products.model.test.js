@@ -19,9 +19,11 @@ describe('Testando model de produtos', function() {
     const [product] = products;
     sinon.stub(connection, 'execute').resolves([[product]]);
 
-    const productId = 1;
+    const productId = 1
     const result = await productsModel.getById(productId);
 
-    expect(result).to.be.equal([product])
+    expect(result).to.be.deep.equal([product]);
   });
+
+  afterEach(sinon.restore);
 });
