@@ -27,5 +27,14 @@ describe('Testando products serveci', function () {
     expect(message).to.be.equal(ERROR_MESSAGE);
   });
 
+  it('Verifica se a função getProductById retorna um objeto com chave type equal a null e chave message com produto como valor', async function () {
+    sinon.stub(productsModel, 'getById').resolves([products[0]]);
+
+    const { type, message } = await productsService.getProductById(1);
+
+    expect(type).to.be.equal(null);
+    expect(message).to.be.deep.equal([products[0]]);
+  });
+
   afterEach(sinon.restore);
 });
