@@ -14,4 +14,14 @@ describe('Testando model de produtos', function() {
 
     expect(result).to.be.equal(products);
   });
+
+  it('Testa se for passado um id valido para a função getById tem o retorno esperado', async function () {
+    const [product] = products;
+    sinon.stub(connection, 'execute').resolves([[product]]);
+
+    const productId = 1;
+    const result = await productsModel.getById(productId);
+
+    expect(result).to.be.equal([product])
+  });
 });
