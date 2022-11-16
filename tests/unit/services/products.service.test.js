@@ -27,13 +27,22 @@ describe('Testando products serveci', function () {
     expect(message).to.be.equal(ERROR_MESSAGE);
   });
 
-  it('Verifica se a função getProductById retorna um objeto com chave type equal a null e chave message com produto como valor', async function () {
+  it('Verifica se a função getProductById retorna um objeto com chave type equal a null e chave message com produto como valor.', async function () {
     sinon.stub(productsModel, 'getById').resolves([products[0]]);
 
     const { type, message } = await productsService.getProductById(1);
 
     expect(type).to.be.equal(null);
     expect(message).to.be.deep.equal([products[0]]);
+  });
+
+  it('Verifica se não for encontrado produtos no banco de dados a função getProductById retorna uma mensagem de error.', async function () {
+    sinon.stub(productsModel, 'getById').resolves([]);
+
+    const { type, message } = await productsService.getProductById(1);
+
+    expect(type).to.be.equal(CODE_ERROR);
+    expect(message).to.be.equal(ERROR_MESSAGE);
   });
 
   afterEach(sinon.restore);
