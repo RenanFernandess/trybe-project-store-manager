@@ -28,5 +28,6 @@ const nothingFoundError = { type: 404, message: 'Product not found' };
 module.exports = {
   products,
   getProductsOk,
+  getProductByIdOk,
   nothingFoundError,
 };
