@@ -18,6 +18,14 @@ describe('Testando products serveci', function () {
     expect(message).to.be.equal(products);
   });
 
+  it('Verifica se a função getProducts retorna os produtos em ordem crescente.', async function () {
+    sinon.stub(productsModel, 'getAll').resolves(products.reverse());
+
+    const { message } = await productsService.getProducts();
+
+    expect(message).to.be.equal(products);
+  });
+
   it('Verifica se não for encontrado produtos no banco de dados a função getProducts retorna uma mensagem de error.', async function () {
     sinon.stub(productsModel, 'getAll').resolves([]);
 
