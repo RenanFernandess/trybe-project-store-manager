@@ -4,10 +4,10 @@ const sinon = require('sinon');
 const connection = require('../../../src/models/db/connection');
 const productsModel = require('../../../src/models/products.model');
 
-const { products } = require('./mocks/products.model.mock');
+const { products, newProduct } = require('./mocks/products.model.mock');
 
-describe('Testando model de produtos', function() {
-  it('Testa se função getAll tem o retorno esperado', async function () {
+describe('Testando products model', function() {
+  it('Testa se função getAll tem o retorno esperado.', async function () {
     sinon.stub(connection, 'execute').resolves([products]);
 
     const result = await productsModel.getAll();
@@ -15,7 +15,7 @@ describe('Testando model de produtos', function() {
     expect(result).to.be.equal(products);
   });
 
-  it('Testa se for passado um id valido para a função getById tem o retorno esperado', async function () {
+  it('Testa se for passado um id valido para a função getById tem o retorno esperado.', async function () {
     const [product] = products;
     sinon.stub(connection, 'execute').resolves([[product]]);
 
@@ -23,6 +23,19 @@ describe('Testando model de produtos', function() {
     const result = await productsModel.getById(productId);
 
     expect(result).to.be.deep.equal([product]);
+  });
+
+  it('Testa se é possivel adicionar um novo produto com a função insert.', async function () {
+    const { id, name } = newProduct;
+    sinon.stub(connection, 'execute')
+      .onFirstCall()
+      .resolves([[{ insertId: id }]])
+      .onSecondCall()
+      .resolves([[newProduct]]);
+
+    const result = await productsModel.insert({ name });
+
+    expect(result).to.be.deep.equal(newProduct);
   });
 
   afterEach(sinon.restore);
