@@ -33,7 +33,7 @@ describe('Testando products controller', function () {
     expect(res.json).to.have.been.calledWith(products);
   });
 
-  it('Testa se a função getProducts retorna o status code 404 e uma mensagem de erro casso ocorra algum problema', async function () {
+  it('Testa se a função getProducts retorna o status code 404 e uma mensagem de erro casso ocorra algum problema.', async function () {
     const req = {}
     const res = {}
 
@@ -45,6 +45,20 @@ describe('Testando products controller', function () {
 
     expect(res.status).to.have.been.calledWith(STATUS_CODE_ERROR);
     expect(res.json).to.have.been.calledWith({ message });
+  });
+
+  it('Testa se a função getProductById retorna o status code 200 e o produtos referente ao id.', async function () {
+    const req = { params: { id: 1 } };
+    const res = {};
+
+    res.status = sinon.stub().returns(res);
+    res.json = sinon.stub().returns();
+    sinon.stub(productsService, 'getProductById').resolves(getProductByIdOk);
+
+    await productsController.getProductById(req, res);
+
+    expect(res.status).to.have.been.calledWith(STATUS_CODE_OK);
+    expect(res.json).to.have.been.calledWith({ ...products[0] });
   });
 
   afterEach(sinon.restore);
