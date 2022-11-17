@@ -60,5 +60,12 @@ describe('Testando products serveci', function () {
     expect(message).to.be.equal('"name" is required');
   });
 
+  it('Testa se caso o campo name não tiver no minimo 5 caracteres um erro é retornado.', async function () {
+    const { type, message } = await productsService.addProduct({ name: 'aui' });
+
+    expect(type).to.be.equal(422);
+    expect(message).to.be.equal('"name" length must be at least 5 characters long');
+  });
+
   afterEach(sinon.restore);
 });
