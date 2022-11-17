@@ -1,7 +1,7 @@
 const { expect } = require('chai');
 const sinon = require('sinon');
 
-const { products } = require('./mocks/products.service.mock');
+const { products, newProduct } = require('./mocks/products.service.mock');
 const productsService = require('../../../src/services/products.service');
 const productsModel = require('../../../src/models/products.model');
 
@@ -51,6 +51,13 @@ describe('Testando products serveci', function () {
 
     expect(type).to.be.equal(CODE_ERROR);
     expect(message).to.be.equal(ERROR_MESSAGE);
+  });
+
+  it('Testa se caso o campo name não seja passado um erro é retornado.', async function () {
+    const { type, message } = await productsService.addProduct({});
+
+    expect(type).to.be.equal(400);
+    expect(message).to.be.equal('"name" is required');
   });
 
   afterEach(sinon.restore);
