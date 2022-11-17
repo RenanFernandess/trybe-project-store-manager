@@ -7,4 +7,6 @@ productsRouter.get('/', productsController.getProducts);
 
 productsRouter.get('/:id', productsController.getProductById);
 
+productsRouter.post('/', productsController.addProduct);
+
 module.exports = productsRouter;
