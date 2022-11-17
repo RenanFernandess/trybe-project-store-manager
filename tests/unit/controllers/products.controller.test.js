@@ -93,5 +93,21 @@ describe('Testando products controller', function () {
     expect(res.json).to.have.been.calledWith(newProduct);
   });
 
+  it('Testa se a função addProduct retorna algum code de error caso algo de errado.', async function () {
+    const req = { body: { name: 'aui' } };
+    const res = {};
+
+    res.status = sinon.stub().returns(res);
+    res.json = sinon.stub().returns();
+    sinon.stub(productsService, 'addProduct').resolves(addProductError);
+
+    const { type, message } = addProductError;
+
+    await productsController.addProduct(req, res);
+
+    expect(res.status).to.have.been.calledWith(type);
+    expect(res.json).to.have.been.calledWith({ message });
+  });
+
   afterEach(sinon.restore);
 });
