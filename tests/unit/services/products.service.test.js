@@ -67,5 +67,15 @@ describe('Testando products serveci', function () {
     expect(message).to.be.equal('"name" length must be at least 5 characters long');
   });
 
+  it('Verifica se a função addProduct retorna um objeto com chave type equal a null e chave message com produto adicionado como valor.', async function () {
+    sinon.stub(productsModel, 'insert').resolves(newProduct);
+
+    const { name } = newProduct;
+    const { type, message } = await productsService.addProduct({ name });
+
+    expect(type).to.be.equal(null);
+    expect(message).to.be.deep.equal(newProduct);
+  });
+
   afterEach(sinon.restore);
 });
