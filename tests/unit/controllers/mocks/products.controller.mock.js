@@ -20,7 +20,7 @@ const getProductsOk = {
 
 const getProductByIdOk = {
   type: null,
-  message: products[0],
+  message: [products[0]],
 }
 
 const nothingFoundError = { type: 404, message: 'Product not found' };
