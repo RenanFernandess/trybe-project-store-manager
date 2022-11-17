@@ -30,10 +30,19 @@ const newProduct = {
   name: 'peixe xablau',
 };
 
+const addProductOk = {
+  type: null,
+  message: newProduct,
+}
+
+const addProductError = { type: 400, message: '"name" is required' };
+
 module.exports = {
   products,
   getProductsOk,
   getProductByIdOk,
+  addProductOk,
+  addProductError,
   nothingFoundError,
   newProduct,
 };
