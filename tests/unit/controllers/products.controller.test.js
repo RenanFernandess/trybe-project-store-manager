@@ -9,9 +9,12 @@ const productsService = require('../../../src/services/products.service');
 const productsController = require('../../../src/controllers/products.controller');
 const {
   products,
+  newProduct,
+  addProductOk,
   getProductsOk,
   getProductByIdOk,
   nothingFoundError,
+  addProductError,
 } = require('./mocks/products.controller.mock')
 
 const STATUS_CODE_OK = 200;
@@ -73,6 +76,21 @@ describe('Testando products controller', function () {
 
     expect(res.status).to.have.been.calledWith(STATUS_CODE_ERROR);
     expect(res.json).to.have.been.calledWith({ message });
+  });
+
+  it('Testa se a função addProduct retorna o status code 201 e o produto adicionado.', async function () {
+    const { name } = newProduct;
+    const req = { body: { name } };
+    const res = {};
+
+    res.status = sinon.stub().returns(res);
+    res.json = sinon.stub().returns();
+    sinon.stub(productsService, 'addProduct').resolves(addProductOk);
+
+    await productsController.addProduct(req, res);
+
+    expect(res.status).to.have.been.calledWith(201);
+    expect(res.json).to.have.been.calledWith(newProduct);
   });
 
   afterEach(sinon.restore);
