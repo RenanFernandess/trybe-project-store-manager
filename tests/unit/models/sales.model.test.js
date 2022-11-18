@@ -14,4 +14,15 @@ describe('Testa sales model', function () {
 
     expect(result).to.be.equal(1);
   });
+
+  it('Testa se a função getSaleDetails retorna os detalhes da venda produto e quantidade.', async function () {
+    sinon.stub(connection, 'execute').resolves([saleProducts]);
+
+    const saleId = 1
+    const result = await salesModel.getSaleDetails(saleId);
+
+    expect(result).to.be.deep.equal(saleProducts);
+  });
+
+  afterEach(sinon.restore);
 });
