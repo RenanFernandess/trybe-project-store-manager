@@ -4,7 +4,14 @@ const sinon = require('sinon');
 const salesModel = require('../../../src/models/sales.model');
 const salesService = require('../../../src/services/sales.service');
 const productsModule = require('../../../src/models/products.model');
-const { saleProducts, addSaleReturn, quantityIsReq, quantityValueError, porductIdIsReq } = require('./mocks/sales.service.mock');
+const {
+  saleProducts,
+  addSaleReturn,
+  quantityIsReq,
+  quantityValueError,
+  porductIdIsReq,
+  productNotFound,
+} = require('./mocks/sales.service.mock');
 
 describe('Testa sales service', function () {
   it('Testa se a função addSale retorna os detalher da venda.', async function () {
@@ -67,6 +74,25 @@ describe('Testa sales service', function () {
 
     expect(result.type).to.be.equal(quantityValueError.type);
     expect(result.message).to.be.equal(quantityValueError.message);
+  });
+
+  it('Testa se a função addSale retorna status code e message de error quando o productId passa não existir.', async function () {
+    sinon.stub(productsModule, 'getById').resolves([])
+    const mock = [
+      {
+        "productId": 1,
+        "quantity": 1,
+      },
+      {
+        "productId": 20,
+        "quantity": 5,
+      }
+    ];
+
+    const result = await salesService.addSale(mock);
+
+    expect(result.type).to.be.equal(productNotFound.type);
+    expect(result.message).to.be.equal(productNotFound.message);
   });
 
   afterEach(sinon.restore);
