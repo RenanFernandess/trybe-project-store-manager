@@ -17,7 +17,7 @@ describe('Testa sales service', function () {
     expect(result).to.be.deep.equal(addSaleReturn);
   });
 
-  it('Testa se a função retorna status conde e message de error.', async function () {
+  it('Testa se a função retorna status code e message de error quando a chave quantity não for encontrada.', async function () {
     const mock =[
       {
         "productId": 1,
