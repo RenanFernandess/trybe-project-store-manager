@@ -7,7 +7,7 @@ chai.use(sinonChai);
 
 const salesService = require('../../../src/services/sales.service');
 const salesController = require('../../../src/controllers/sales.controller');
-const { addSaleReturn, porductIdIsReq, saleProducts } = require('./mocks/sales.controller.mock');
+const { addSaleReturn, porductIdIsReq, saleProducts, saleProductsError } = require('./mocks/sales.controller.mock');
 
 describe('Testa sales controller', async function () {
   it('Testa se a função addSale retorna status code 201 e os dados da venda.', async function () {
@@ -22,6 +22,19 @@ describe('Testa sales controller', async function () {
 
     expect(res.status).to.have.been.calledWith(201);
     expect(res.json).to.have.been.calledWith(addSaleReturn.message);
+  });
+
+  it('Testa se a função addSale retorna menssagem de code de error.', async function () {
+    const req = { body: saleProductsError };
+    const res = {};
+
+    res.status = sinon.stub().returns(res);
+    res.json = sinon.stub().returns();
+
+    const result = await salesController.addSale(req, res);
+
+    expect(res.status).to.have.been.calledWith(porductIdIsReq.type);
+    expect(res.json).to.have.been.calledWith({ message: porductIdIsReq.message });
   });
 
   afterEach(sinon.restore);
