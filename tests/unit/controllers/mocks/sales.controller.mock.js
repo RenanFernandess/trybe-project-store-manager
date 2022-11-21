@@ -9,6 +9,15 @@ const saleProducts = [
   }
 ];
 
+const saleProductsError = [
+  {
+    "quantity": 1
+  },
+  {
+    "productId": 2,
+    "quantity": 5
+  }
+]
 
 const addSaleReturn = {
   type: null,
@@ -24,4 +33,5 @@ module.exports = {
   saleProducts,
   addSaleReturn,
   porductIdIsReq,
+  saleProductsError,
 };
