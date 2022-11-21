@@ -4,7 +4,6 @@ const { salesValidate } = require('./validations/validations');
 const addSale = async (sales) => {
   const { type, message } = await salesValidate(sales);
   if (type) {
-    console.log('ok');
     return { type, message };
   }
 
