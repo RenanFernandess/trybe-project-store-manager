@@ -3,9 +3,7 @@ const { salesValidate } = require('./validations/validations');
 
 const addSale = async (sales) => {
   const { type, message } = await salesValidate(sales);
-  if (type) {
-    return { type, message };
-  }
+  if (type) return { type, message };
 
   const saleId = await salesModule.insertSale();
   await Promise.all(
@@ -19,6 +17,15 @@ const addSale = async (sales) => {
   };
 };
 
+const getSales = async () => {
+  const result = await salesModule.getAll();
+
+  if (!result.length) return { type: 404, message: 'Sale not found' };
+
+  return { type: null, message: result };
+};
+
 module.exports = {
   addSale,
+  getSales,
 };
