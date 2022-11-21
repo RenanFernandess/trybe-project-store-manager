@@ -9,6 +9,15 @@ const saleProducts = [
   }
 ];
 
+const addSaleReturn = {
+  type: null,
+  message: {
+    id: 1,
+    itemsSold: saleProducts,
+  },
+};
+
 module.exports = {
   saleProducts,
+  addSaleReturn,
 };
