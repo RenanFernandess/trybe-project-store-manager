@@ -25,7 +25,7 @@ describe('Testando products model', function() {
     expect(result).to.be.deep.equal([product]);
   });
 
-  it('Testa se é possivel adicionar um novo produto com a função insert.', async function () {
+  it('Testa se é possível adicionar um novo produto com a função insert.', async function () {
     const { id, name } = newProduct;
     sinon.stub(connection, 'execute')
       .onFirstCall()
@@ -36,6 +36,29 @@ describe('Testando products model', function() {
     const result = await productsModel.insert({ name });
 
     expect(result).to.be.deep.equal(newProduct);
+  });
+
+  it('Testa se é possível atualizar um produto com a função update.', async function () {
+    const { id } = newProduct;
+    sinon.stub(connection, 'execute')
+      .onFirstCall()
+      .resolves([[{}]])
+      .onSecondCall()
+      .resolves([[{ id, name: 'test' }]]);
+
+    const result = await productsModel.update(id, { name: 'test' });
+
+    expect(result).to.be.deep.equal({ id, name: 'test' });
+    expect(result).not.to.be.deep.equal(newProduct);
+  });
+
+  it('Testa se é possível atualizar um produto com a função update.', async function () {
+    const { id } = newProduct;
+    sinon.stub(connection, 'execute').resolves([[{}]])
+
+    const result = await productsModel.remove(id);
+
+    expect(result).to.be.equal(undefined);
   });
 
   afterEach(sinon.restore);
