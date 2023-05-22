@@ -11,89 +11,93 @@ const {
   quantityValueError,
   productIdIsReq,
   productNotFound,
+  updateSaleReturn,
+  saleNotFound,
 } = require('./mocks/sales.service.mock');
 
 describe('Testa sales service', function () {
-  it('Testa se a função addSale retorna os detalhes da venda.', async function () {
-    sinon.stub(productsModule, 'getById').resolves([{}])
-    sinon.stub(salesModel, 'insertSale').resolves(1);
-    sinon.stub(salesModel, 'insertSaleProducts').resolves(undefined);
-    sinon.stub(salesModel, 'getSaleDetails').resolves(saleProducts);
+  describe('Testa a função addSale', function () {
+    it('Testa se a função addSale retorna os detalhes da venda.', async function () {
+      sinon.stub(productsModule, 'getById').resolves([{}])
+      sinon.stub(salesModel, 'insertSale').resolves(1);
+      sinon.stub(salesModel, 'insertSaleProducts').resolves(undefined);
+      sinon.stub(salesModel, 'getSaleDetails').resolves(saleProducts);
 
-    const result = await salesService.addSale(saleProducts);
+      const result = await salesService.addSale(saleProducts);
 
-    expect(result).to.be.deep.equal(addSaleReturn);
-  });
+      expect(result).to.be.deep.equal(addSaleReturn);
+    });
 
-  it('Testa se a função addSale retorna status 400 e message de error ""quantity" is required" quando a chave quantity não for encontrada.', async function () {
-    const mock =[
-      {
-        "productId": 1,
-      },
-      {
-        "productId": 2,
-        "quantity": 5,
-      }
-    ];
+    it('Testa se a função addSale retorna status 400 e message de error ""quantity" is required" quando a chave quantity não for encontrada.', async function () {
+      const mock = [
+        {
+          "productId": 1,
+        },
+        {
+          "productId": 2,
+          "quantity": 5,
+        }
+      ];
 
-    const result = await salesService.addSale(mock);
+      const result = await salesService.addSale(mock);
 
-    expect(result.type).to.be.equal(quantityIsReq.type);
-    expect(result.message).to.be.equal(quantityIsReq.message);
-  });
+      expect(result.type).to.be.equal(quantityIsReq.type);
+      expect(result.message).to.be.equal(quantityIsReq.message);
+    });
 
-  it('Testa se a função addSale retorna status 400 e message de error ""productId" is required" quando a chave productId não for encontrada.', async function () {
-    const mock = [
-      {
-        "quantity": 1,
-      },
-      {
-        "productId": 2,
-        "quantity": 5,
-      }
-    ];
+    it('Testa se a função addSale retorna status 400 e message de error ""productId" is required" quando a chave productId não for encontrada.', async function () {
+      const mock = [
+        {
+          "quantity": 1,
+        },
+        {
+          "productId": 2,
+          "quantity": 5,
+        }
+      ];
 
-    const result = await salesService.addSale(mock);
+      const result = await salesService.addSale(mock);
 
-    expect(result.type).to.be.equal(productIdIsReq.type);
-    expect(result.message).to.be.equal(productIdIsReq.message);
-  });
+      expect(result.type).to.be.equal(productIdIsReq.type);
+      expect(result.message).to.be.equal(productIdIsReq.message);
+    });
 
-  it('Testa se a função addSale retorna status 422 e message de error ""quantity" must be greater than or equal to 1" quando o valor a chave quantity for menor ou igual a 0.', async function () {
-    const mock = [
-      {
-        "productId": 2,
-        "quantity": 0,
-      },
-      {
-        "productId": 2,
-        "quantity": 5,
-      }
-    ];
+    it('Testa se a função addSale retorna status 422 e message de error ""quantity" must be greater than or equal to 1" quando o valor a chave quantity for menor ou igual a 0.', async function () {
+      const mock = [
+        {
+          "productId": 2,
+          "quantity": 0,
+        },
+        {
+          "productId": 2,
+          "quantity": 5,
+        }
+      ];
 
-    const result = await salesService.addSale(mock);
+      const result = await salesService.addSale(mock);
 
-    expect(result.type).to.be.equal(quantityValueError.type);
-    expect(result.message).to.be.equal(quantityValueError.message);
-  });
+      expect(result.type).to.be.equal(quantityValueError.type);
+      expect(result.message).to.be.equal(quantityValueError.message);
+    });
 
-  it('Testa se a função addSale retorna status 404 e message de error "Product not found" quando o productId passado não existir.', async function () {
-    sinon.stub(productsModule, 'getById').resolves([])
-    const mock = [
-      {
-        "productId": 1,
-        "quantity": 1,
-      },
-      {
-        "productId": 20,
-        "quantity": 5,
-      }
-    ];
+    it('Testa se a função addSale retorna status 404 e message de error "Product not found" quando o productId passado não existir.', async function () {
+      sinon.stub(productsModule, 'getById').resolves([])
+      const mock = [
+        {
+          "productId": 1,
+          "quantity": 1,
+        },
+        {
+          "productId": 20,
+          "quantity": 5,
+        }
+      ];
 
-    const result = await salesService.addSale(mock);
+      const result = await salesService.addSale(mock);
 
-    expect(result.type).to.be.equal(productNotFound.type);
-    expect(result.message).to.be.equal(productNotFound.message);
+      expect(result.type).to.be.equal(productNotFound.type);
+      expect(result.message).to.be.equal(productNotFound.message);
+    });
   });
 
   it('Testa se a função getSales retorna status 404 e message de error "Sale not found" quando não tiver nenhuma venda cadastrada.', async function () {
@@ -130,6 +134,129 @@ describe('Testa sales service', function () {
 
     expect(result.type).to.be.equal(null);
     expect(result.message).to.be.deep.equal([saleProducts[0]]);
+  });
+
+  describe("Testa a função updateSale", function () {
+    it('Testa se a função updateSale retorna os detalhes da venda.', async function () {
+      sinon.stub(productsModule, 'getById').resolves([{}])
+      sinon.stub(salesModel, 'findById').resolves([{}]);
+      sinon.stub(salesModel, 'update').resolves();
+
+      const result = await salesService.updateSale(1, saleProducts);
+
+      expect(result.type).to.be.equal(null);
+      expect(result.message).to.be.deep.equal(updateSaleReturn);
+    });
+
+    it('Testa se a função updateSale retorna status 400 e message de error ""quantity" is required" quando a chave quantity não for encontrada.', async function () {
+      const mock = [
+        {
+          "productId": 1,
+        },
+        {
+          "productId": 2,
+          "quantity": 5,
+        }
+      ];
+
+      const result = await salesService.updateSale(1, mock);
+
+      expect(result.type).to.be.equal(quantityIsReq.type);
+      expect(result.message).to.be.equal(quantityIsReq.message);
+    });
+
+    it('Testa se a função updateSale retorna status 400 e message de error ""productId" is required" quando a chave productId não for encontrada.', async function () {
+      const mock = [
+        {
+          "quantity": 1,
+        },
+        {
+          "productId": 2,
+          "quantity": 5,
+        }
+      ];
+
+      const result = await salesService.updateSale(1, mock);
+
+      expect(result.type).to.be.equal(productIdIsReq.type);
+      expect(result.message).to.be.equal(productIdIsReq.message);
+    });
+
+    it('Testa se a função updateSale retorna status 422 e message de error ""quantity" must be greater than or equal to 1" quando o valor a chave quantity for menor ou igual a 0.', async function () {
+      const mock = [
+        {
+          "productId": 2,
+          "quantity": 0,
+        },
+        {
+          "productId": 2,
+          "quantity": 5,
+        }
+      ];
+
+      const result = await salesService.updateSale(1, mock);
+
+      expect(result.type).to.be.equal(quantityValueError.type);
+      expect(result.message).to.be.equal(quantityValueError.message);
+    });
+
+    it('Testa se a função updateSale retorna status 404 e message de error "Product not found" quando o productId passado não existir.', async function () {
+      sinon.stub(productsModule, 'getById').resolves([])
+      const mock = [
+        {
+          "productId": 1,
+          "quantity": 1,
+        },
+        {
+          "productId": 20,
+          "quantity": 5,
+        }
+      ];
+
+      const result = await salesService.updateSale(1, mock);
+
+      expect(result.type).to.be.equal(productNotFound.type);
+      expect(result.message).to.be.equal(productNotFound.message);
+    });
+
+    it('Testa se a função updateSale retorna status 404 e message de error "Product not found" quando o productId passado não existir.', async function () {
+      sinon.stub(productsModule, 'getById').resolves([{}])
+      sinon.stub(salesModel, 'findById').resolves([]);
+      const mock = [
+        {
+          "productId": 1,
+          "quantity": 1,
+        },
+        {
+          "productId": 20,
+          "quantity": 5,
+        }
+      ];
+
+      const result = await salesService.updateSale(1, mock);
+
+      expect(result.type).to.be.equal(saleNotFound.type);
+      expect(result.message).to.be.equal(saleNotFound.message);
+    });
+  });
+
+  it('Verifica se a função deleteSale retorna um objeto com chave type com valor 404 e chave message com valor "Product not found" caso o id recebido não pertença a algum produto.', async function () {
+    sinon.stub(salesModel, 'findById').resolves([]);
+
+    const { type, message } = await salesService.deleteSale(1);
+
+    expect(type).to.be.equal(saleNotFound.type);
+    expect(message).to.be.equal(saleNotFound.message);
+  });
+
+  it('Verifica se a função deleteSale retorna um objeto com chave type com valor null e chave message com valor .', async function () {
+    sinon.stub(salesModel, 'findById').resolves([{}]);
+    sinon.stub(salesModel, 'remove').resolves();
+
+    const { type, message } = await salesService.deleteSale(1);
+
+    expect(type).to.be.equal(null);
+    expect(message).to.be.equal('');
   });
 
   afterEach(sinon.restore);

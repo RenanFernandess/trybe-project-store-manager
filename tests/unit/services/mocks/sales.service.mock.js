@@ -17,12 +17,19 @@ const addSaleReturn = {
   },
 };
 
+const updateSaleReturn = {
+  "saleId": 1,
+  "itemsUpdated": saleProducts,
+}
+
 const productIdIsReq = { type: 400, message: '"productId" is required' };
 const quantityIsReq = { type: 400, message: '"quantity" is required' };
 const quantityValueError = {
   type: 422, message: '"quantity" must be greater than or equal to 1',
 };
 const productNotFound = { type: 404, message: 'Product not found' }
+
+const saleNotFound = { type: 404, message: 'Sale not found' }
 
 module.exports = {
   saleProducts,
@@ -31,4 +38,6 @@ module.exports = {
   quantityIsReq,
   quantityValueError,
   productNotFound,
+  updateSaleReturn,
+  saleNotFound,
 };
