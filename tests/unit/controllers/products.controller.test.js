@@ -36,7 +36,7 @@ describe('Testando products controller', function () {
     expect(res.json).to.have.been.calledWith(products);
   });
 
-  it('Testa se a função getProducts retorna o status code 404 e uma mensagem de erro casso ocorra algum problema.', async function () {
+  it('Testa se a função getProducts retorna o status code e uma mensagem de erro casso ocorra algum problema.', async function () {
     const req = {}
     const res = {}
 
@@ -64,7 +64,7 @@ describe('Testando products controller', function () {
     expect(res.json).to.have.been.calledWith({ ...products[0] });
   });
 
-  it('Testa se a função getProductById retorna o status code 404 e uma mensagem de erro casso ocorra algum problema.', async function () {
+  it('Testa se a função getProductById retorna o status code e uma mensagem de erro casso ocorra algum problema.', async function () {
     const req = { params: { id: 1 } };
     const res = {};
 
@@ -106,6 +106,62 @@ describe('Testando products controller', function () {
     await productsController.addProduct(req, res);
 
     expect(res.status).to.have.been.calledWith(type);
+    expect(res.json).to.have.been.calledWith({ message });
+  });
+
+  it('Testa se a função updateProduct retorna o status code 200 e o produtos atualizado.', async function () {
+    const req = { params: { id: 1 } };
+    const res = {};
+
+    res.status = sinon.stub().returns(res);
+    res.json = sinon.stub().returns();
+    sinon.stub(productsService, 'updateProduct').resolves(getProductByIdOk);
+
+    await productsController.updateProduct(req, res);
+
+    expect(res.status).to.have.been.calledWith(STATUS_CODE_OK);
+    expect(res.json).to.have.been.calledWith([products[0]]);
+  });
+
+  it('Testa se a função updateProduct retorna o status code e uma mensagem de erro casso ocorra algum problema.', async function () {
+    const req = { params: { id: 1 } }
+    const res = {}
+
+    res.status = sinon.stub().returns(res);
+    res.json = sinon.stub().returns();
+    sinon.stub(productsService, 'updateProduct').resolves(nothingFoundError);
+
+    await productsController.updateProduct(req, res);
+
+    expect(res.status).to.have.been.calledWith(STATUS_CODE_ERROR);
+    expect(res.json).to.have.been.calledWith({ message });
+  });
+
+  it('Testa se a função deleteProduct retorna o status code 204 e o produtos atualizado.', async function () {
+    const req = { params: { id: 1 } };
+    const res = {};
+
+    res.status = sinon.stub().returns(res);
+    res.json = sinon.stub().returns();
+    sinon.stub(productsService, 'deleteProduct').resolves(getProductByIdOk);
+
+    await productsController.deleteProduct(req, res);
+
+    expect(res.status).to.have.been.calledWith(204);
+    expect(res.json).to.have.been.calledWith({});
+  });
+
+  it('Testa se a função deleteProduct retorna o status code e uma mensagem de erro casso ocorra algum problema.', async function () {
+    const req = { params: { id: 1 } }
+    const res = {}
+
+    res.status = sinon.stub().returns(res);
+    res.json = sinon.stub().returns();
+    sinon.stub(productsService, 'deleteProduct').resolves(nothingFoundError);
+
+    await productsController.deleteProduct(req, res);
+
+    expect(res.status).to.have.been.calledWith(STATUS_CODE_ERROR);
     expect(res.json).to.have.been.calledWith({ message });
   });
 
