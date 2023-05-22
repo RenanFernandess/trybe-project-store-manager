@@ -33,6 +33,25 @@ const getSaleById = async (id) => {
   return { type: null, message: result };
 };
 
+const updateSale = async (id, sales) => {
+  const { type, message } = await salesValidate(sales);
+  if (type) return { type, message };
+
+  const check = await salesModel.findById(id);
+  if (!check.length) return { type: 404, message: 'Sale not found' };
+
+  await Promise.all(
+    sales.map(async (product) => salesModel.update(id, product)),
+  );
+
+  const result = {
+    saleId: id,
+    itemsUpdated: sales,
+  };
+
+  return { type: null, message: result };
+};
+
 const deleteSale = async (id) => {
   const check = await salesModel.findById(id);
   if (!check.length) return { type: 404, message: 'Sale not found' };
@@ -45,4 +64,5 @@ module.exports = {
   getSales,
   getSaleById,
   deleteSale,
+  updateSale,
 };
