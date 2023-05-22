@@ -94,5 +94,80 @@ describe('Testa sales controller', async function () {
     expect(res.json).to.have.been.calledWith({ message: 'Sale not found' });
   });
 
+  it('Testa se a função updateSale retorna o status code 200 e o produtos atualizado.', async function () {
+    const req = {
+      params: { id: 1 },
+      body: [
+        {
+        "productId": 1,
+        "quantity": 10
+        },
+      ],
+    };
+    const res = {};
+
+    res.status = sinon.stub().returns(res);
+    res.json = sinon.stub().returns();
+
+    const result = {
+      "saleId": 1,
+      "itemsUpdated": [
+        {
+          "productId": 1,
+          "quantity": 10
+        },
+      ],
+    };
+
+    sinon.stub(salesService, 'updateSale').resolves({ type: null, message: result });
+
+    await salesController.updateSale(req, res);
+
+    expect(res.status).to.have.been.calledWith(200);
+    expect(res.json).to.have.been.calledWith(result);
+  });
+
+  it('Testa se a função updateSale retorna o status code e uma mensagem de erro casso ocorra algum problema.', async function () {
+    const req = { params: { id: 1 } }
+    const res = {}
+
+    res.status = sinon.stub().returns(res);
+    res.json = sinon.stub().returns();
+    sinon.stub(salesService, 'updateSale').resolves({ type: 404, message: 'Sale not found' });
+
+    await salesController.updateSale(req, res);
+
+    expect(res.status).to.have.been.calledWith(404);
+    expect(res.json).to.have.been.calledWith({ message: 'Sale not found' });
+  });
+
+  it('Testa se a função deleteSale retorna o status code 204 e o produtos atualizado.', async function () {
+    const req = { params: { id: 1 } };
+    const res = {};
+
+    res.status = sinon.stub().returns(res);
+    res.json = sinon.stub().returns();
+    sinon.stub(salesService, 'deleteSale').resolves({ type: null, message: ''});
+
+    await salesController.deleteSale(req, res);
+
+    expect(res.status).to.have.been.calledWith(204);
+    expect(res.json).to.have.been.calledWith({});
+  });
+
+  it('Testa se a função deleteSale retorna o status code e uma mensagem de erro casso ocorra algum problema.', async function () {
+    const req = { params: { id: 1 } }
+    const res = {}
+
+    res.status = sinon.stub().returns(res);
+    res.json = sinon.stub().returns();
+    sinon.stub(salesService, 'deleteSale').resolves({ type: 404, message: 'Sale not found' });
+
+    await salesController.deleteSale(req, res);
+
+    expect(res.status).to.have.been.calledWith(404);
+    expect(res.json).to.have.been.calledWith({ message: 'Sale not found' });
+  });
+
   afterEach(sinon.restore);
 });
