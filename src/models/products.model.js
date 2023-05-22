@@ -7,6 +7,13 @@ const getAll = async () => {
   return result;
 };
 
+const findByQuery = async (name) => {
+  const [result] = await connection.execute(
+    `SELECT * FROM StoreManager.products WHERE name like '%${name}%'`,
+);
+  return result;
+};
+
 const getById = async (id) => {
   const [result] = await connection.execute(
     'SELECT * FROM StoreManager.products WHERE id = (?)',
@@ -50,4 +57,5 @@ module.exports = {
   insert,
   update,
   remove,
+  findByQuery,
 };

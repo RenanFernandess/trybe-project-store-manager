@@ -1,9 +1,11 @@
 const productsModel = require('../models/products.model');
 
+const PRODUCT_NOT_FOUND = 'Product not found';
+
 const getProducts = async () => {
   const products = await productsModel.getAll();
 
-  if (!products.length) return { type: 404, message: 'Product not found' };
+  if (!products.length) return { type: 404, message: PRODUCT_NOT_FOUND };
 
   return {
     type: null,
@@ -11,10 +13,19 @@ const getProducts = async () => {
   };
 };
 
+const getProductsByQuery = async (name) => {
+  const products = await (name ? productsModel.findByQuery(name) : productsModel.getAll());
+
+  return {
+    type: null,
+    message: products,
+  };
+};
+
 const getProductById = async (id) => {
   const product = await productsModel.getById(id);
 
-  if (!product.length) return { type: 404, message: 'Product not found' };
+  if (!product.length) return { type: 404, message: PRODUCT_NOT_FOUND };
 
   return { type: null, message: product };
 };
@@ -39,7 +50,7 @@ const updateProduct = async (id, product) => {
   }
 
   const check = await productsModel.getById(id);
-  if (!check.length) return { type: 404, message: 'Product not found' };
+  if (!check.length) return { type: 404, message: PRODUCT_NOT_FOUND };
 
   const result = await productsModel.update(id, product);
 
@@ -48,7 +59,7 @@ const updateProduct = async (id, product) => {
 
 const deleteProduct = async (id) => {
   const check = await productsModel.getById(id);
-  if (!check.length) return { type: 404, message: 'Product not found' };
+  if (!check.length) return { type: 404, message: PRODUCT_NOT_FOUND };
   await productsModel.remove(id);
   return { type: null, message: '' };
 };
@@ -59,4 +70,5 @@ module.exports = {
   addProduct,
   updateProduct,
   deleteProduct,
+  getProductsByQuery,
 };
