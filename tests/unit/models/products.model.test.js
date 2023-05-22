@@ -52,7 +52,7 @@ describe('Testando products model', function() {
     expect(result).not.to.be.deep.equal(newProduct);
   });
 
-  it('Testa se é possível atualizar um produto com a função update.', async function () {
+  it('Testa se é possível remover um produto com a função remove.', async function () {
     const { id } = newProduct;
     sinon.stub(connection, 'execute').resolves([[{}]])
 
