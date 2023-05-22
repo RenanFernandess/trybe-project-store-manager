@@ -50,5 +50,22 @@ describe('Testa sales model', function () {
     expect(result).to.be.deep.equal([sale]);
   });
 
+  it('Testa se é possível atualizar um produto com a função update.', async function () {
+    sinon.stub(connection, 'execute').resolves([[{}]]);
+
+    const result = await salesModel.update(1, saleProducts[0]);
+
+    expect(result).to.be.equal(undefined);
+  });
+
+  it('Testa se é possível remover um produto com a função remove.', async function () {
+    sinon.stub(connection, 'execute').resolves([[{}]]);
+
+    const id = 1
+    const result = await salesModel.remove(id);
+
+    expect(result).to.be.equal(undefined);
+  });
+
   afterEach(sinon.restore);
 });
