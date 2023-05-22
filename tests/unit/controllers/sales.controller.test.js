@@ -7,7 +7,8 @@ chai.use(sinonChai);
 
 const salesService = require('../../../src/services/sales.service');
 const salesController = require('../../../src/controllers/sales.controller');
-const { addSaleReturn, porductIdIsReq, saleProducts, saleProductsError } = require('./mocks/sales.controller.mock');
+const {
+  addSaleReturn, productIdIsReq, saleProducts, saleProductsError, sales, sale } = require('./mocks/sales.controller.mock');
 
 describe('Testa sales controller', async function () {
   it('Testa se a função addSale retorna status code 201 e os dados da venda.', async function () {
@@ -24,7 +25,7 @@ describe('Testa sales controller', async function () {
     expect(res.json).to.have.been.calledWith(addSaleReturn.message);
   });
 
-  it('Testa se a função addSale retorna menssagem de code de error.', async function () {
+  it('Testa se a função addSale retorna mensagem de error e status code.', async function () {
     const req = { body: saleProductsError };
     const res = {};
 
@@ -33,8 +34,64 @@ describe('Testa sales controller', async function () {
 
     const result = await salesController.addSale(req, res);
 
-    expect(res.status).to.have.been.calledWith(porductIdIsReq.type);
-    expect(res.json).to.have.been.calledWith({ message: porductIdIsReq.message });
+    expect(res.status).to.have.been.calledWith(productIdIsReq.type);
+    expect(res.json).to.have.been.calledWith({ message: productIdIsReq.message });
+  });
+
+  it('Testa se a função getSales retorna o status code 200 e as vendas.', async function () {
+    const req = { params: { id: 1 } };
+    const res = {};
+
+    res.status = sinon.stub().returns(res);
+    res.json = sinon.stub().returns();
+    sinon.stub(salesService, 'getSales').resolves({ type: null, message: sales });
+
+    await salesController.getSales(req, res);
+
+    expect(res.status).to.have.been.calledWith(200);
+    expect(res.json).to.have.been.calledWith(sales);
+  });
+
+  it('Testa se a função getSales retorna o status code e uma mensagem de erro casso ocorra algum problema.', async function () {
+    const req = { params: { id: 1 } }
+    const res = {}
+
+    res.status = sinon.stub().returns(res);
+    res.json = sinon.stub().returns();
+    sinon.stub(salesService, 'getSales').resolves({ type: 404, message: 'Sale not found' });
+
+    await salesController.getSales(req, res);
+
+    expect(res.status).to.have.been.calledWith(404);
+    expect(res.json).to.have.been.calledWith({ message: 'Sale not found' });
+  });
+
+  it('Testa se a função getSaleById retorna o status code 200 e as vendas.', async function () {
+    const req = { params: { id: 1 } };
+    const res = {};
+
+    res.status = sinon.stub().returns(res);
+    res.json = sinon.stub().returns();
+    sinon.stub(salesService, 'getSaleById').resolves({ type: null, message: sale });
+
+    await salesController.getSaleById(req, res);
+
+    expect(res.status).to.have.been.calledWith(200);
+    expect(res.json).to.have.been.calledWith(sale);
+  });
+
+  it('Testa se a função getSaleById retorna o status code e uma mensagem de erro casso ocorra algum problema.', async function () {
+    const req = { params: { id: 1 } }
+    const res = {}
+
+    res.status = sinon.stub().returns(res);
+    res.json = sinon.stub().returns();
+    sinon.stub(salesService, 'getSaleById').resolves({ type: 404, message: 'Sale not found' });
+
+    await salesController.getSaleById(req, res);
+
+    expect(res.status).to.have.been.calledWith(404);
+    expect(res.json).to.have.been.calledWith({ message: 'Sale not found' });
   });
 
   afterEach(sinon.restore);
